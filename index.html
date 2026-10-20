@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rotorsort - sort with rotors</title>
+<meta name="description" content="Sort the row by rotating windows of tiles. Par is the proven minimum, found by breadth-first search.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>rotorsort</h1>
+  <p class="tagline">sort the row with rotating windows</p>
+  <section id="hud"><span id="lvl"></span><span id="info"></span></section>
+  <p class="label">rotor size</p><div id="rotors" class="row"></div>
+  <p class="label">direction</p><div class="row"><button id="dir" class="secondary"></button></div>
+  <p class="label">click the first tile of the window</p>
+  <div id="row"></div>
+  <p id="msg"></p>
+  <div class="row"><button id="undo" class="secondary">undo</button><button id="reset" class="secondary">restart</button><button id="prev" class="secondary">prev</button><button id="next" class="secondary">next</button></div>
+  <details><summary>how to play</summary>
+    <p>Pick a rotor size k. Clicking a tile rotates the k tiles starting there one place, right or left depending on the direction button. Get 1 to n in order using as few moves as possible. Par is the proven minimum. Some levels give you two rotor sizes.</p></details>
+  <h2>levels</h2><div id="levels"></div>
+  <footer><a href="https://github.com/TheRealAlexxx/rotorsort">source</a> - MIT</footer>
+</main>
+<script src="core.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
