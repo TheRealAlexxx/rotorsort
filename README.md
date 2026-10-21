@@ -4,6 +4,7 @@ Sort a row of numbers using rotating windows, in as few moves as possible.
 
 **Play:** https://therealalexxx.github.io/rotorsort/
 
+![rotorsort](screenshot.png)
 A level gives you a shuffled row and one or two rotor sizes. A rotor of size k
 rotates any k neighbouring tiles one place, left or right. Par is the proven
 minimum number of moves.
