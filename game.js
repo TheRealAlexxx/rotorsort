@@ -21,11 +21,16 @@
   function draw() {
     [...$('rotors').children].forEach((b) => b.classList.toggle('on', +b.textContent === k));
     $('dir').textContent = dir > 0 ? 'right  >' : '<  left';
-    const r = $('row'); r.innerHTML = '';
+    // Update tiles in place: replacing them orphans any in-flight tap/click
+    // (the browser aborts the click when the target vanishes mid-gesture),
+    // which made first taps on touch screens do nothing.
+    const r = $('row');
+    while (r.children.length > row.length) r.removeChild(r.lastChild);
     row.forEach((v, i) => {
-      const t = document.createElement('div'); t.className = 't' + (v === i + 1 ? ' ok' : '') + (hover >= 0 && i >= hover && i < hover + k ? ' hl' : '');
+      let t = r.children[i];
+      if (!t) { t = document.createElement('div'); r.appendChild(t); }
+      t.className = 't' + (v === i + 1 ? ' ok' : '') + (hover >= 0 && i >= hover && i < hover + k ? ' hl' : '');
       t.textContent = v;
-      r.appendChild(t);
     });
     const done = Core.isSorted(row);
     $('info').textContent = 'moves ' + hist.length + '  par ' + lv.par;

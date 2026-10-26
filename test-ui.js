@@ -22,6 +22,8 @@ function makeEl(tag) {
     set innerHTML(v) { if (v === '') el.children.forEach((c) => { c.parent = null; }), el.children = []; },
     get innerHTML() { return ''; },
     appendChild(c) { c.parent = el; el.children.push(c); },
+    removeChild(c) { const i = el.children.indexOf(c); if (i >= 0) el.children.splice(i, 1); if (c) c.parent = null; return c; },
+    get lastChild() { return el.children[el.children.length - 1]; },
     set textContent(v) { el._text = String(v); },
     get textContent() { return el._text; },
     closest(sel) { let n = el; while (n) { if (sel === '.t' && n.className.split(' ').includes('t')) return n; n = n.parent; } return null; },
@@ -61,9 +63,8 @@ test('a tap on a tile rotates the window even though hover redraws the row', asy
   const { byId, tap } = await boot('./game.js');
   const rowText = () => byId.row.children.map((c) => c.textContent).join(',');
   const before = rowText();
-  let result = tap(0);
-  if (result === 'aborted') result = tap(0); // first tap may only preview the window; the next must land
-  assert.strictEqual(result, 'clicked', 'two taps never delivered a move to the game');
+  const result = tap(0);
+  assert.strictEqual(result, 'clicked', 'the first tap on a tile did not reach the game');
   assert.notStrictEqual(rowText(), before, 'row did not change after the tap');
   assert.match(byId.info.textContent, /moves 1 /, 'move counter did not advance');
 });
