@@ -25,8 +25,6 @@
     row.forEach((v, i) => {
       const t = document.createElement('div'); t.className = 't' + (v === i + 1 ? ' ok' : '') + (hover >= 0 && i >= hover && i < hover + k ? ' hl' : '');
       t.textContent = v;
-      t.onmouseenter = () => { hover = i; draw(); }; t.onmouseleave = () => { hover = -1; draw(); };
-      t.onclick = () => move(i);
       r.appendChild(t);
     });
     const done = Core.isSorted(row);
@@ -35,6 +33,14 @@
     $('msg').textContent = done ? 'Sorted in ' + hist.length + '. ' + (hist.length <= lv.par ? 'Par, the proven minimum.' : (hist.length - lv.par) + ' over par.') : '';
     if (done) { const s = store.get(); s.best = s.best || {}; if (!s.best[idx] || hist.length < s.best[idx]) s.best[idx] = hist.length; store.set(s); list(); $('share').hidden = !daily; }
   }
+  // Tile events live on the row container, not the tiles: draw() rebuilds the
+  // tiles, so a per-tile handler dies with its node. On touch screens a tap's
+  // synthesized hover runs before the click, and the rebuild aborted the tap's
+  // click entirely - tiles were untappable on phones. The container survives.
+  const row$ = $('row');
+  row$.onmouseover = (e) => { const t = e.target.closest('.t'); const i = t ? [...row$.children].indexOf(t) : -1; if (i !== hover) { hover = i; draw(); } };
+  row$.onmouseleave = () => { if (hover !== -1) { hover = -1; draw(); } };
+  row$.onclick = (e) => { const t = e.target.closest('.t'); if (t) move([...row$.children].indexOf(t)); };
   function move(i) {
     if (Core.isSorted(row) || i + k > row.length) return;
     hist.push(row); row = Core.applyMove(row, i, k, dir); draw();
